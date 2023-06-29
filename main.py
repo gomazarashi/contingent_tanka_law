@@ -12,11 +12,17 @@ def make_law_number_list(category=1):
     numbers = [e.text for e in root.iter() if e.tag == "LawNo"]
     return numbers
 
+#法令番号を指定して法令を取得する関数
+def get_law_text(law_number,version=1):
+    url=f"https://elaws.e-gov.go.jp/api/{version}/lawdata/{law_number}"
+    response = requests.get(url)
+    root = ElementTree.fromstring(response.content.decode(encoding="utf-8"))
+    contents = [e.text.strip() for e in root.iter() if e.text]
+    return [text.replace('\u3000', '') for text in contents if text] #全角スペースを削除
+
 
 def main ():
-    print(make_law_number_list())
-    print("--------------------")
-    print(len(make_law_number_list()))
+    print(get_law_text(law_number="令和四年政令第二百七号"))
 
 if __name__ == '__main__':
     main()
