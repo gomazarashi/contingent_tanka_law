@@ -3,6 +3,7 @@ from pprint import pprint
 import re
 from xml.etree import ElementTree
 from functools import lru_cache
+import jamorasep as jms
 
 #法令番号のリストを作成する関数
 def make_law_number_list(category=1):
@@ -20,6 +21,11 @@ def get_law_text(law_number):
     contents = [e.text.strip() for e in root.iter() if e.text]
     return [text.replace('\u3000', '') for text in contents if text] #全角スペースを削除
 
+#与えられたカタカナの文字列を5,7,5に分割する関数
+def create_haiku(text):
+    parsed_text_list = jms.parse(text, output_format="katakana")
+    haiku = ["".join(parsed_text_list[:5]), "".join(parsed_text_list[5:12]), "".join(parsed_text_list[12:])]
+    return haiku
 
 def main ():
     print(get_law_text(law_number="昭和二十二年勅令第百六十五号"))
